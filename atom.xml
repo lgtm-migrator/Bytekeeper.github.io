@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+	<title></title>
+	<link href="https://www.bytekeeper.org/atom.xml" rel="self" type="application/atom+xml"/>
+  <link href="https://www.bytekeeper.org"/>
+	<generator uri="https://www.getzola.org/">Zola</generator>
+	<updated>2022-08-05T00:00:00+00:00</updated>
+	<id>https://www.bytekeeper.org/atom.xml</id>
+	<entry xml:lang="en">
+		<title>4X Game Loop</title>
+		<published>2022-08-05T00:00:00+00:00</published>
+		<updated>2022-08-05T00:00:00+00:00</updated>
+		<link rel="alternate" href="https://www.bytekeeper.org/blog/game-loop/" type="text/html"/>
+		<id>https://www.bytekeeper.org/blog/game-loop/</id>
+		<content type="html">&lt;p&gt;I think I don&#x27;t really need to explain what a 4X game is, maybe not even what the 4X stand for.
+But, I&#x27;ll do it anyway - the gameplay loop of a typical 4X game is:
+
+&lt;figure style=&quot;margin: 0; line-height: 1em; font-size: 0.9em&quot;&gt;
+
+&lt;img src=&quot;4x_game.dot.png&quot; style=&quot;width: 100%&quot; alt=&quot;The 4 Xs&quot;&#x2F;&gt;
+
+&lt;figcaption&gt;A loop of loops - that is 4X&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;eXplore&lt;&#x2F;li&gt;
+&lt;li&gt;eXpand&lt;&#x2F;li&gt;
+&lt;li&gt;eXploit&lt;&#x2F;li&gt;
+&lt;li&gt;eXterminate&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Much of the fun of this simple formula comes from the fact that none of those factors stands on its own.
+You usually cannot expand without exploring first. Sometimes to expand by exterminating an enemy at a location first.
+What is there to exploit, if you did not expand before?
+And how will you exterminate, if you lack the resources you ought to have exploited first.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s dive deeper into the &lt;del&gt;abyss&lt;&#x2F;del&gt; parts of such a game:&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;exploration&quot;&gt;Exploration&lt;&#x2F;h2&gt;
+&lt;p&gt;The most basic approach is sending out scouts. An alternative would be spying.
+Maybe diplomacy uncovers some secrets as well.&lt;&#x2F;p&gt;
+&lt;p&gt;Keywords:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Scouts&lt;&#x2F;li&gt;
+&lt;li&gt;Diplomacy&lt;&#x2F;li&gt;
+&lt;li&gt;Special events&lt;&#x2F;li&gt;
+&lt;li&gt;Spies&lt;&#x2F;li&gt;
+&lt;li&gt;Racial abilities&lt;&#x2F;li&gt;
+&lt;li&gt;Tech abilities&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;expansion&quot;&gt;Expansion&lt;&#x2F;h2&gt;
+&lt;p&gt;Again, there&#x27;s the direct way of sending a colony ship (settler). Alternatively you can take over an enemy colony.
+A random encounter could grant you a new colony.&lt;&#x2F;p&gt;
+&lt;p&gt;Keywords:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Colony ships&lt;&#x2F;li&gt;
+&lt;li&gt;Outposts&lt;&#x2F;li&gt;
+&lt;li&gt;Diplomacy&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;exploitation&quot;&gt;Exploitation&lt;&#x2F;h2&gt;
+&lt;p&gt;Pumping up the population. Building factories. Gather food. There could be a lot of resources to be gathered.
+Also things like research are part of this.
+There are also hidden resources. A large army could incline neighbours for that large tribute.&lt;&#x2F;p&gt;
+&lt;p&gt;Keywords:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Research&lt;&#x2F;li&gt;
+&lt;li&gt;Mining&lt;&#x2F;li&gt;
+&lt;li&gt;Taxation&lt;&#x2F;li&gt;
+&lt;li&gt;Diplomacy&lt;&#x2F;li&gt;
+&lt;li&gt;Spies&lt;&#x2F;li&gt;
+&lt;li&gt;Production&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;extermination&quot;&gt;Extermination&lt;&#x2F;h2&gt;
+&lt;p&gt;Send your force and crush your foes. Or let your spies sabotage the heck out of them. Or let some allies or vassals handle it.&lt;&#x2F;p&gt;
+&lt;p&gt;Keywords:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Battle ships&lt;&#x2F;li&gt;
+&lt;li&gt;Planetary defense&lt;&#x2F;li&gt;
+&lt;li&gt;Spies&lt;&#x2F;li&gt;
+&lt;li&gt;Diplomacy&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h1 id=&quot;design-for-my-game&quot;&gt;Design for my Game&lt;&#x2F;h1&gt;
+&lt;p&gt;I planned on covering all topics above, but that is basically to large for a single post.
+In the last post I covered a few basics of research. 
+I will try a breadth-first approach in design and switch to another topic.&lt;&#x2F;p&gt;
+&lt;p&gt;Let&#x27;s tackle...&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;exploration-1&quot;&gt;Exploration&lt;&#x2F;h2&gt;
+&lt;p&gt;The basis for almost all games here is using some sort of scout.
+It would not make sense to change that, it is pretty much what players expect to find.&lt;&#x2F;p&gt;
+&lt;p&gt;But, what is a scout? A special ship (surveyor anyone)? A player designed ship?
+Pre-designed units have a large benefit: They can be balanced pretty well.
+The player chooses which ship to build, but not what it is composed of.&lt;&#x2F;p&gt;
+&lt;p&gt;Player designed ships are way more interesting in concept.
+In practice, it boils down to a few ships with a specific purpose (like scouting). 
+Remnants of the Precursors for example allows only a few designs, which emphasizes that.&lt;&#x2F;p&gt;
+&lt;h3 id=&quot;ship-design&quot;&gt;Ship Design&lt;&#x2F;h3&gt;
+&lt;p&gt;I do think, limiting the number of designs is good idea.
+But for the actual design of a ship I have another idea. As usual, ships are composed of different modules.
+Each module modifies some attributes of a ship:&lt;&#x2F;p&gt;
+&lt;table&gt;&lt;thead&gt;&lt;tr&gt;&lt;th&gt;Attribute&lt;&#x2F;th&gt;&lt;th&gt;Effect&lt;&#x2F;th&gt;&lt;&#x2F;tr&gt;&lt;&#x2F;thead&gt;&lt;tbody&gt;
+&lt;tr&gt;&lt;td&gt;Cost&lt;&#x2F;td&gt;&lt;td&gt;Makes your ship more expensive (but shiny and pretty as well)&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Space&lt;&#x2F;td&gt;&lt;td&gt;Most modules take up some precious space on a ship, but some can extend it&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Range Bonus&lt;&#x2F;td&gt;&lt;td&gt;Increases&#x2F;Decreases the range a ship can distance itself to the nearest colony&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Interstellar Speed Bonus&lt;&#x2F;td&gt;&lt;td&gt;Increases&#x2F;Decreases speed for long range travel&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Interstellar Stealth Bonus&lt;&#x2F;td&gt;&lt;td&gt;Makes ships more&#x2F;less detectable while in flight&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Hit point Bonus&lt;&#x2F;td&gt;&lt;td&gt;Increases&#x2F;Decreases the hull of a ship to take more of a punch&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Shield Bonus&lt;&#x2F;td&gt;&lt;td&gt;Similar to hit points, but weak against energy weapons - strong against physical weapons&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Combat Speed Bonus&lt;&#x2F;td&gt;&lt;td&gt;Increases&#x2F;Decreases speed for combat&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Combat Repair&lt;&#x2F;td&gt;&lt;td&gt;Repairs ships by a small amount each combat turn&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Particle Damage&lt;&#x2F;td&gt;&lt;td&gt;Adds particle beams with some strength as combat and point defense weapons&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Projectile Damage&lt;&#x2F;td&gt;&lt;td&gt;Adds projectile weapons with some strength as combat weapon&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Missile Damage&lt;&#x2F;td&gt;&lt;td&gt;Adds missiles with some strength as combat weapons&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Combat Stealth&lt;&#x2F;td&gt;&lt;td&gt;Makes ships harder to hit or easier to hit in combat&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;tr&gt;&lt;td&gt;Colonists&lt;&#x2F;td&gt;&lt;td&gt;This allows a ship to colonize an empty planet&lt;&#x2F;td&gt;&lt;&#x2F;tr&gt;
+&lt;&#x2F;tbody&gt;&lt;&#x2F;table&gt;
+&lt;p&gt;A ship, by itself is just a hull. The collection of modules selected will determine its purpose.
+But, there&#x27;s no free lunch. All modules will be balanced, one way or another.&lt;&#x2F;p&gt;
+&lt;p&gt;For example, a missile launcher weapon will most likely take up a lot of space and will not be cheap.
+A particle beam weapon on the other hand could be smaller and cheaper.
+But at the cost of reduced combat stealth, and a weakness in damaging the hull of enemy ships.&lt;&#x2F;p&gt;
+&lt;p&gt;Once again this reminds of RPG attributes on items:
+&lt;img src=&quot;https:&#x2F;&#x2F;www.bytekeeper.org&#x2F;blog&#x2F;game-loop&#x2F;Simple%20Weapon.png&quot; alt=&quot;Simple Weapon&quot; title=&quot;Impressive&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;That is intentional.&lt;&#x2F;p&gt;
+&lt;p&gt;I really want to enforce that ships are good at some things and bad at others.
+Otherwise you will end up with the typical &amp;quot;high tech jack of all trades&amp;quot; ships.
+Also, the number of designs should be limited, as with &lt;a href=&quot;https:&#x2F;&#x2F;rayfowler.itch.io&#x2F;remnants-of-the-precursors&quot;&gt;ROTP&lt;&#x2F;a&gt;.
+I would like the player to see each design as a &amp;quot;character&amp;quot;. Although with some serious multiple personality disorder.&lt;&#x2F;p&gt;
+&lt;p&gt;So modifying a design should be possible. What happens with the existing ships?
+They could keep their original design. But then, the game could just have unlimited designs.
+They could be scrapped. They could be retrofitted. Or something in-between.&lt;&#x2F;p&gt;
+&lt;p&gt;No code was &lt;del&gt;harmed&lt;&#x2F;del&gt; written for this post. As mentioned before, I already have a small code base. 
+But exploring (no pun intended) the design space is more of an issue for now.
+So next time we take a look at &lt;em&gt;Expanding&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>MOO resp. ROTPR inspired 4X game</title>
+		<published>2022-07-30T00:00:00+00:00</published>
+		<updated>2022-07-30T00:00:00+00:00</updated>
+		<link rel="alternate" href="https://www.bytekeeper.org/blog/rotpr-clone/" type="text/html"/>
+		<id>https://www.bytekeeper.org/blog/rotpr-clone/</id>
+		<content type="html">&lt;p&gt;So &lt;a href=&quot;https:&#x2F;&#x2F;makingcomputerdothings.com&#x2F;a-new-project-untitled-space-mercenary-game&#x2F;&quot;&gt;Sonko&lt;&#x2F;a&gt; started a new project.
+Following suit, I jumped back in time to already have a game project on-going for quite some time now.
+A bad habit of mine is to reach some milestone and then &amp;quot;pause&amp;quot; (drop) the project.
+But now I&#x27;ll return to it, and as a small incentive to keep on it, I&#x27;ll start this blog.&lt;&#x2F;p&gt;
+&lt;p&gt;As with Sonko, this means my StarCraft AI related projects are on hold (don&#x27;t worry, the &lt;a href=&quot;https:&#x2F;&#x2F;www.basil-ladder.net&#x2F;&quot;&gt;basil ladder&lt;&#x2F;a&gt; will keep running).&lt;&#x2F;p&gt;
+&lt;p&gt;Also, on a rather technical note: I dropped Jekyll as a static site generator and moved to &lt;a href=&quot;https:&#x2F;&#x2F;www.getzola.org&#x2F;&quot;&gt;zola&lt;&#x2F;a&gt;. Every Jekyll upgrade wasted a lot of time to get it running again. Zola is just one binary, and it should run fine on github actions as well.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;introduction&quot;&gt;Introduction&lt;&#x2F;h1&gt;
+&lt;p&gt;I played &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Master_of_Orion_II%3A_Battle_at_Antares&quot;&gt;Master of Orion 2&lt;&#x2F;a&gt; (MOO for now) a lot when I was younger.
+Even back then I tried to create my own clone of the game. 
+But the scale of the game was a bit to much for me back then - maybe even today.&lt;&#x2F;p&gt;
+&lt;p&gt;But not all thing were good. It irked me a bit how much the game slowed down in the later phases due to the massive amount of micro-management.&lt;&#x2F;p&gt;
+&lt;p&gt;Fast forward some 30 years and some more MOO games. I always was a fan of easy to learn hard to master games.
+Almost none of the games inspired by it (or being successor to) seem to do that. They just upped the complexity.&lt;&#x2F;p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Perfection is achieved, not when there is nothing more to add, but when there is nothing left to take away.&lt;&#x2F;p&gt;
+&lt;&#x2F;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;Antoine de Saint-Exupéry, Airman&#x27;s Odyssey &lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;
+&lt;img src=&quot;rotpr.png&quot; style=&quot;width: 100%&quot; alt=&quot;Remnants of the Precursors&quot;&#x2F;&gt;
+
+
+Remnants of the Precursors (ROTPR for now) has a simple interface. Maybe even a bit to bland. But it gets the job done. I did not really play the original &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Master_of_Orion&quot;&gt;Master of Orion&lt;&#x2F;a&gt;, I was still &lt;del&gt;wasting&lt;&#x2F;del&gt; enjoying my time with &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Civilization_(video_game)&quot;&gt;Civilization&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;I do like the simpler colony management, which avoids going through every colony in the mid-late game. Spying is a bit strange, it is not really obvious what multiple networks and&#x2F;or high spendings are doing.&lt;&#x2F;p&gt;
+&lt;p&gt;
+&lt;img src=&quot;moo2.jpg&quot; style=&quot;width: 100%&quot; alt=&quot;Master of Orion 2&quot;&#x2F;&gt;
+
+
+Master of Orion 2 (not 1) is a bit different, more complex in some aspects (colony management) and less so in others (less diplomacy&#x2F;spying).&lt;&#x2F;p&gt;
+&lt;p&gt;The UI is a bit dated, and looks only good when shrunk down. Still looks nice though.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;designing-my-game&quot;&gt;Designing My Game&lt;&#x2F;h1&gt;
+&lt;p&gt;My game already has quite a lot of code, but barely anything to show.
+I decided to create the game abstraction in code as a first step. This was a mistake in my opinion. 
+While its clear that the inner game model should be sound, only testing it via unit tests is rather dull.&lt;&#x2F;p&gt;
+&lt;p&gt;It currently covers the basics of building ships and colonizing other systems.
+Like any software architecture, it is best to delay the choices which &amp;quot;cost&amp;quot; the most - as long as possible.
+This might sound unintuitive, but help not wasting a huge amount of time due to some bad &amp;quot;large&amp;quot; initial decisions.&lt;&#x2F;p&gt;
+&lt;p&gt;Although I got some basics covered, I want to explore design space a bit further before continuing&#x2F;refactoring.&lt;&#x2F;p&gt;
+&lt;p&gt;I know a few things I &lt;em&gt;want&lt;&#x2F;em&gt; in the game design:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Colonization should be per star system (like ROTPR). Colonizing individual planets really takes its toll on usability. Multiple different factions owning each a planet in a system? A separate UI for planets in a system? It just makes things more tedious.&lt;&#x2F;li&gt;
+&lt;li&gt;Research based on a RPG like skill tree. Even ROTPR, which tries to make research meaningful succumbs to the &amp;quot;unimportant research item&amp;quot; problem.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+
+&lt;figure style=&quot;margin: 0; line-height: 1em; font-size: 0.9em&quot;&gt;
+
+&lt;img src=&quot;tech_tree.dot.png&quot; style=&quot;width: 100%&quot; alt=&quot;Tech tree like skill tree&quot;&#x2F;&gt;
+
+&lt;figcaption&gt;Imagine some more tier levels here...&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;p&gt;Tech items above are just examples (for some I don&#x27;t have an idea on what they do), I do want to make it unconventional - yet useful. Every tech has 3 upgrades which will improve on the previous state in one way or the other.&lt;&#x2F;p&gt;
+&lt;p&gt;Ideas for unconventional techs:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Fanatics - For every upgrade, establish a colony on any unoccupied star system&lt;&#x2F;li&gt;
+&lt;li&gt;Boost - Increase productivity of a single colony for a short while&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Ideas for more conventional techs:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;XYZ Armor - Unlocks a type of armor, further upgrades improve efficiency&lt;&#x2F;li&gt;
+&lt;li&gt;XYZ Weapons - Unlocks a type of weapon, further upgrades improve efficiency&lt;&#x2F;li&gt;
+&lt;li&gt;Productive - Increases productivity per upgrade level&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Now the real change comes with the way you unlock techs. Usually, you designate a research topic and after some turns you&#x27;ll get it. This is not the case here.&lt;&#x2F;p&gt;
+&lt;p&gt;Instead, you build up research points - and once you have enough you can immediately unlock or upgrade a tech.
+This allows for fast reaction to new circumstances. There are also only a very limited amount of techs to unlock. With either, MOO2 or ROTPR I always feel like the actual decision of what to research matters little. Yes, some do - but you can always replace them later with something else. I want the player to be able to focus on a certain play style, stick to it, but still be able to win.&lt;&#x2F;p&gt;
+&lt;p&gt;That&#x27;s all for today!&lt;&#x2F;p&gt;
+&lt;p&gt;Next Time: Gameplay Loop&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>A son was born</title>
+		<published>2020-05-16T00:00:00+00:00</published>
+		<updated>2020-05-16T00:00:00+00:00</updated>
+		<link rel="alternate" href="https://www.bytekeeper.org/blog/2020-05-16/" type="text/html"/>
+		<id>https://www.bytekeeper.org/blog/2020-05-16/</id>
+		<content type="html">&lt;p&gt;This was meant to be a tech related blog, mostly for Broodwar AI related stuff and private projects. Since private projects are included, I guess one could call my son a private project.&lt;&#x2F;p&gt;
+&lt;p&gt;Screaming into the light, he was born in late February. His name is Benjamin, which I am certain means horse-dung in some weird language. I do not care, go away! And due to Corona, we have been left alone for most of the time since then.&lt;&#x2F;p&gt;
+&lt;p&gt;My last blog entry was in January, and up until now I really did not have the energy to write a new article. But since most of my free time is now reserved for serving the little demon, I&#x27;ll just write about what 
+I know best now: My spawn. Prepare for many picture which may or may not include my son (hint: nope, no pix from him - maybe in a later post).&lt;&#x2F;p&gt;
+&lt;p&gt;As with all babies, he is cute (actually I believe mostly parents find most babies cute, for my part they look like french baguettes mostly...). If you remember Tamagochi, it is really its human form.&lt;&#x2F;p&gt;
+&lt;p&gt;Lucky for me, we have a spare room - otherwise working would be very hard due to missing shut-eye. Which means shift 1 is work, shift 2 is work, shift 3 is sleep. And things like &lt;em&gt;this&lt;&#x2F;em&gt; mostly eat into shift 3.&lt;&#x2F;p&gt;
+&lt;p&gt;A little human goes through a lot of development phases. There is the cute phase...&lt;&#x2F;p&gt;
+
+&lt;figure style=&quot;margin: 0; line-height: 1em; font-size: 0.9em&quot;&gt;
+
+&lt;img src=&quot;Cute-Baby.jpg&quot; style=&quot;width: 100%&quot; alt=&quot;Not mine&quot;&#x2F;&gt;
+
+&lt;figcaption&gt;Not mine&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;p&gt;Then there is the crying phase...&lt;&#x2F;p&gt;
+
+&lt;figure style=&quot;margin: 0; line-height: 1em; font-size: 0.9em&quot;&gt;
+
+&lt;img src=&quot;crying_baby.jpg&quot; style=&quot;width: 100%&quot; alt=&quot;Still not mine&quot;&#x2F;&gt;
+
+&lt;figcaption&gt;Nope, still not mine&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;p&gt;And there is the default happy phase&lt;&#x2F;p&gt;
+
+&lt;figure style=&quot;margin: 0; line-height: 1em; font-size: 0.9em&quot;&gt;
+
+&lt;img src=&quot;screaming-yoda.jpg&quot; style=&quot;width: 100%&quot; alt=&quot;Really, what the&quot;&#x2F;&gt;
+
+&lt;figcaption&gt;Definitely not mine &lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;p&gt;OK, the last one might be slightly exaggerated. And it is not the default. At least for my son, most of the time he is pretty happy.&lt;&#x2F;p&gt;
+&lt;p&gt;You are supposed to react to the baby&#x27;s needs. Ignore that at your own peril (eardrums). Really, a lot of time I look at my son and this is what I see:&lt;&#x2F;p&gt;
+
+&lt;figure style=&quot;margin: 0; line-height: 1em; font-size: 0.9em&quot;&gt;
+
+&lt;img src=&quot;mischievous-baby.jpeg&quot; style=&quot;width: 100%&quot; alt=&quot;Are the all able to look like thatReally, what the?&quot;&#x2F;&gt;
+
+&lt;figcaption&gt;Same smirk, but not mine&lt;&#x2F;figcaption&gt;
+&lt;&#x2F;figure&gt;
+
+&lt;p&gt;I believe the general baby package works like this:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;You receive it&lt;&#x2F;li&gt;
+&lt;li&gt;It comes un-boxed, without manual - W.T.H.?&lt;&#x2F;li&gt;
+&lt;li&gt;It must already be defect, or is it supposed to behave this way&lt;&#x2F;li&gt;
+&lt;li&gt;Your midwife (its common to have one here) tells you a lot of good info, and a lot of mumbo-jumbo.&lt;&#x2F;li&gt;
+&lt;li&gt;She tells you what homeopathy &amp;quot;stuff&amp;quot; (I refuse to say medicine here) you can give you baby - that is ok, since placebo also works for babies. (Btw did you know, there is also a &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Nocebo&quot;&gt;nocebo&lt;&#x2F;a&gt; effect? Cool!)&lt;&#x2F;li&gt;
+&lt;li&gt;She tells you to see an osteopath (that is so much dumbfuckery). Uuuuhhhh magic energy waves uuuuhh&lt;&#x2F;li&gt;
+&lt;li&gt;You start to get a grip on it... or do you?&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Thing is, the first few weeks you could care less. Your baby can see like 30cm (about 12in you strange people who stopped in time). It can&#x27;t really focus or look at you.
+After that it actually can focus you, which is good - it can now target practice with its sound-wave gun &lt;em&gt;while looking at you&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Then it starts to smile at you. First for short periods of time, then more. It might also randomly switch from crying, screaming, and laughing.&lt;&#x2F;p&gt;
+&lt;p&gt;We&#x27;re currently within the Stan phase. What that is?&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;img src=&quot;https:&#x2F;&#x2F;www.bytekeeper.org&#x2F;blog&#x2F;2020-05-16&#x2F;stan.gif&quot; alt=&quot;Stan&quot; &#x2F;&gt;&lt;&#x2F;p&gt;
+&lt;p&gt;And with that, I will conclude today&#x27;s &lt;em&gt;rant&lt;&#x2F;em&gt;.&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Comments for static pages? - Part 2</title>
+		<published>2020-01-25T00:00:00+00:00</published>
+		<updated>2020-01-25T00:00:00+00:00</updated>
+		<link rel="alternate" href="https://www.bytekeeper.org/blog/comments-part-2/" type="text/html"/>
+		<id>https://www.bytekeeper.org/blog/comments-part-2/</id>
+		<content type="html">&lt;p&gt;Looking [back]({% link _posts&#x2F;2020-01-21-comments-on-jekyll.markdown %})... I need a bit of DIY GitHub API for Rust.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;still-step-2-create-a-branch-and-pr-automatically&quot;&gt;Still step 2: Create a branch and PR automatically&lt;&#x2F;h2&gt;
+&lt;p&gt;Thankfully, the &lt;a href=&quot;https:&#x2F;&#x2F;developer.github.com&#x2F;v3&#x2F;&quot;&gt;V3 API&lt;&#x2F;a&gt; is really simple.&lt;&#x2F;p&gt;
+&lt;p&gt;Using our tRusty language, we can define some structs to be serialized to JSON for requests:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;derive&lt;&#x2F;span&gt;&lt;span&gt;(Serialize)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;CreateRef {
+&lt;&#x2F;span&gt;&lt;span&gt;    r#&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ref&lt;&#x2F;span&gt;&lt;span&gt;: String, &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; The name to be used
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;sha&lt;&#x2F;span&gt;&lt;span&gt;: String,   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; The commit SHA to point to
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;derive&lt;&#x2F;span&gt;&lt;span&gt;(Serialize)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;CreateFile {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;message&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;content&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;branch&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;committer&lt;&#x2F;span&gt;&lt;span&gt;: UserRef,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;derive&lt;&#x2F;span&gt;&lt;span&gt;(Serialize)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;UserRef {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;email&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;span&gt;
+&lt;&#x2F;span&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;derive&lt;&#x2F;span&gt;&lt;span&gt;(Serialize)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;CreatePR {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;title&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;head&lt;&#x2F;span&gt;&lt;span&gt;: String,   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; The branch to be merged
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;base&lt;&#x2F;span&gt;&lt;span&gt;: String,   &lt;&#x2F;span&gt;&lt;span style=&quot;color:#65737e;&quot;&gt;&#x2F;&#x2F; The target branch for the merge (ie. master)
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The basic steps we want to do are described by these:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;Create a branch, using &lt;code&gt;CreateRef&lt;&#x2F;code&gt;. Git uses refs for things that &amp;quot;have&amp;quot; commits. A branch is just that!&lt;&#x2F;li&gt;
+&lt;li&gt;Create a file on the branch with &lt;code&gt;CreateFile&lt;&#x2F;code&gt;. &lt;code&gt;UserRef&lt;&#x2F;code&gt; will be used as committer (me in this case).&lt;&#x2F;li&gt;
+&lt;li&gt;The last step is to create a PR with &lt;code&gt;CreatePR&lt;&#x2F;code&gt;  (quelle surprise), to merge the branch back.&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;The file we want to create has to be converted to base64 to be used by &lt;code&gt;CreateFile&lt;&#x2F;code&gt;. The content itself should be YAML and contain this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;derive&lt;&#x2F;span&gt;&lt;span&gt;(Serialize)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Comment {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;id&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    r#&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ref&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;message&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;url&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;date&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;u64&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;Luckily &lt;a href=&quot;https:&#x2F;&#x2F;serde.rs&#x2F;&quot;&gt;serde&lt;&#x2F;a&gt; comes to our rescue once again and happily creates a serializer to yaml here.
+Another helpful small library provides base64 encoding. The result is this:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; file = CreateFile {
+&lt;&#x2F;span&gt;&lt;span&gt;    message: &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Comment&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;to_string&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;    content: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;encode&lt;&#x2F;span&gt;&lt;span&gt;(&amp;amp;serde_yaml::to_string(&amp;amp;comment).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;unwrap&lt;&#x2F;span&gt;&lt;span&gt;()),
+&lt;&#x2F;span&gt;&lt;span&gt;    branch: branch_name.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;to_string&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;    committer: UserRef {
+&lt;&#x2F;span&gt;&lt;span&gt;        name: owner.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;to_string&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;        email: owner_email.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;to_string&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;    },
+&lt;&#x2F;span&gt;&lt;span&gt;};
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;The requests itself look quite similar. As an example, here&#x27;s the &lt;code&gt;CreateFile&lt;&#x2F;code&gt; one:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;fn &lt;&#x2F;span&gt;&lt;span style=&quot;color:#8fa1b3;&quot;&gt;create_file&lt;&#x2F;span&gt;&lt;span&gt;(
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;client&lt;&#x2F;span&gt;&lt;span&gt;: &amp;amp;reqwest::blocking::Client,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;owner&lt;&#x2F;span&gt;&lt;span&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;repo&lt;&#x2F;span&gt;&lt;span&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;path&lt;&#x2F;span&gt;&lt;span&gt;: &amp;amp;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;str&lt;&#x2F;span&gt;&lt;span&gt;,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;create_file&lt;&#x2F;span&gt;&lt;span&gt;: &amp;amp;CreateFile,
+&lt;&#x2F;span&gt;&lt;span&gt;) -&amp;gt; reqwest::Result&amp;lt;reqwest::blocking::Response&amp;gt; {
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;let&lt;&#x2F;span&gt;&lt;span&gt; url = url::Url::parse(
+&lt;&#x2F;span&gt;&lt;span&gt;        format!(
+&lt;&#x2F;span&gt;&lt;span&gt;            &amp;quot;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;https:&#x2F;&#x2F;api.github.com&#x2F;repos&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;&#x2F;contents&#x2F;&lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;{}&lt;&#x2F;span&gt;&lt;span&gt;&amp;quot;,
+&lt;&#x2F;span&gt;&lt;span&gt;            owner, repo, path
+&lt;&#x2F;span&gt;&lt;span&gt;        )
+&lt;&#x2F;span&gt;&lt;span&gt;        .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;as_str&lt;&#x2F;span&gt;&lt;span&gt;(),
+&lt;&#x2F;span&gt;&lt;span&gt;    )
+&lt;&#x2F;span&gt;&lt;span&gt;    .&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;unwrap&lt;&#x2F;span&gt;&lt;span&gt;();
+&lt;&#x2F;span&gt;&lt;span&gt;    client.&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;put&lt;&#x2F;span&gt;&lt;span&gt;(url).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;json&lt;&#x2F;span&gt;&lt;span&gt;(create_file).&lt;&#x2F;span&gt;&lt;span style=&quot;color:#96b5b4;&quot;&gt;send&lt;&#x2F;span&gt;&lt;span&gt;()
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;No, &lt;code&gt;reqwest&lt;&#x2F;code&gt; is not a typo! It&#x27;s actually a &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;seanmonstar&#x2F;reqwest&quot;&gt;popular library&lt;&#x2F;a&gt; (I don&#x27;t mean the javascript one).
+I don&#x27;t really need non-blocking I&#x2F;O here, so the &lt;code&gt;blocking&lt;&#x2F;code&gt; client is put to good use.&lt;&#x2F;p&gt;
+&lt;p&gt;The whole Rust project can be found &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Bytekeeper&#x2F;github_comment_rs&quot;&gt;in my GitHub repo&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;I tried to solve this &amp;quot;problem&amp;quot; with some constraints: &lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;It should be inexpensive&lt;&#x2F;li&gt;
+&lt;li&gt;It should respect the privacy of my readers&lt;&#x2F;li&gt;
+&lt;li&gt;It should be simple enough to fix or port&lt;&#x2F;li&gt;
+&lt;li&gt;It should not depend too much on third parties&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;p&gt;Using GitHub for the blog and for comments is very inexpensive. I use no third party commentary service, as such the privacy is protected as much as is possible here.
+The HTML part is very simple and only depends on &lt;a href=&quot;https:&#x2F;&#x2F;jekyllrb.com&#x2F;&quot;&gt;Jekyll&lt;&#x2F;a&gt;. The Rust part is also simple and fits in less than 300 lines of code of Rust.&lt;&#x2F;p&gt;
+&lt;p&gt;Success ✓&lt;&#x2F;p&gt;
+&lt;p&gt;If you have any comments, please leave them down below - since you are actually able to do so now!&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Comments for static pages? - Part 1</title>
+		<published>2020-01-21T00:00:00+00:00</published>
+		<updated>2020-01-21T00:00:00+00:00</updated>
+		<link rel="alternate" href="https://www.bytekeeper.org/blog/comments-on-jekyll/" type="text/html"/>
+		<id>https://www.bytekeeper.org/blog/comments-on-jekyll/</id>
+		<content type="html">&lt;p&gt;&lt;a href=&quot;&#x2F;&quot;&gt;This&lt;&#x2F;a&gt; is actually a static page hosted by &lt;a href=&quot;https:&#x2F;&#x2F;www.github.com&#x2F;&quot;&gt;GitHub&lt;&#x2F;a&gt;, powered by &lt;a href=&quot;https:&#x2F;&#x2F;jekyllrb.com&#x2F;&quot;&gt;Jekyll&lt;&#x2F;a&gt;. 
+But how to get a comment section?&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;give-me-comments&quot;&gt;Give Me Comments&lt;&#x2F;h1&gt;
+&lt;p&gt;Weeeelll....
+You could use a service like Disqus.&lt;&#x2F;p&gt;
+&lt;p&gt;Or, you use the idea from &lt;a href=&quot;https:&#x2F;&#x2F;damieng.com&#x2F;blog&#x2F;2018&#x2F;05&#x2F;28&#x2F;wordpress-to-jekyll-comments&quot;&gt;damieng&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;Jekyll has a neat feature: you can place data files under &lt;code&gt;_data&lt;&#x2F;code&gt; and access in Liquid templates.&lt;&#x2F;p&gt;
+&lt;p&gt;And that&#x27;s more or less the starting point. Add comments as data and render them via Jekyll (utilizing Liquid).&lt;&#x2F;p&gt;
+&lt;p&gt;Using the folder &lt;code&gt;_data&#x2F;comments&#x2F;{slug}&#x2F;&lt;&#x2F;code&gt; to place comment files in. (&lt;code&gt;slug&lt;&#x2F;code&gt; being the &amp;quot;slugified&amp;quot; post name.)
+The actual files can be in a few formats, but I used yaml.
+Here is an example comment:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;yaml&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-yaml &quot;&gt;&lt;code class=&quot;language-yaml&quot; data-lang=&quot;yaml&quot;&gt;&lt;span&gt;---
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;id&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1579711318_617889634
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ref&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;basil-timeouts
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;message&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Testing comments
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#a3be8c;&quot;&gt;Bytekeeper
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;url&lt;&#x2F;span&gt;&lt;span&gt;: &amp;quot;&amp;quot;
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;date&lt;&#x2F;span&gt;&lt;span&gt;: &lt;&#x2F;span&gt;&lt;span style=&quot;color:#d08770;&quot;&gt;1579711318
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;&lt;code&gt;id&lt;&#x2F;code&gt; is the id of the comment &lt;em&gt;and&lt;&#x2F;em&gt; the base name of the file: &lt;code&gt;1579711318_617889634.yml&lt;&#x2F;code&gt;.
+&lt;code&gt;ref&lt;&#x2F;code&gt; is a reference for what the comment was for. Ie. a slug or the id of another comment (not yet working here).
+&lt;code&gt;message&lt;&#x2F;code&gt; is too complicated to explain... really. So is &lt;code&gt;name&lt;&#x2F;code&gt;. &lt;code&gt;url&lt;&#x2F;code&gt; is the website a user gave and will be used to render the commenter&#x27;s name as a link to the site.
+&lt;code&gt;date&lt;&#x2F;code&gt; a simple timestamp and, as you might have noticed, part of the &lt;code&gt;id&lt;&#x2F;code&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;But having the comments stored as data will not be enough, unless I can convince people to check out the GitHub repo for comments.&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;render-me-comments&quot;&gt;Render Me Comments&lt;&#x2F;h1&gt;
+&lt;p&gt;This one will be quick.
+I use a modified version of &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;damieng&#x2F;jekyll-blog-comments&#x2F;tree&#x2F;master&#x2F;jekyll&#x2F;_includes&quot;&gt;damieng&#x27;s _includes&lt;&#x2F;a&gt;.
+Since I modified the structure a bit I had to adapt it. I also changed the layout bit, the final version can be seen down here (unless it does not work in which case: bummer).&lt;&#x2F;p&gt;
+&lt;p&gt;For now they look ok but will certainly need more fine-tuning, especially once it&#x27;s possible to reply to individual comments as well.&lt;&#x2F;p&gt;
+&lt;p&gt;Storage place for comments ✓&lt;&#x2F;p&gt;
+&lt;p&gt;Rendering comments ✓&lt;&#x2F;p&gt;
+&lt;p&gt;Adding comments: ❌&lt;&#x2F;p&gt;
+&lt;h1 id=&quot;add-me-commentse&quot;&gt;Add Me Commentse&lt;&#x2F;h1&gt;
+&lt;p&gt;This could be as simple as people wanting to comment grabbing a fork of my repository and adding a comment file in data and creating a PR for it.
+I&#x27;m pretty sure this avoids all comment spamming bots and requires almost no moderation.&lt;&#x2F;p&gt;
+&lt;p&gt;You don&#x27;t want to fork? Ok, I&#x27;ll give you commit r... waaait.&lt;&#x2F;p&gt;
+&lt;p&gt;So basically, using damieng&#x27;s idea:&lt;&#x2F;p&gt;
+&lt;ul&gt;
+&lt;li&gt;I want a PR for each comment&lt;&#x2F;li&gt;
+&lt;li&gt;I want branch and PR to be automatically created&lt;&#x2F;li&gt;
+&lt;li&gt;Once I merge it, GitHub will automatically update and voilà&lt;&#x2F;li&gt;
+&lt;&#x2F;ul&gt;
+&lt;h2 id=&quot;step-1-create-a-service-that-accepts-comments&quot;&gt;Step 1: Create a service that accepts comments&lt;&#x2F;h2&gt;
+&lt;p&gt;This could be any form of (micro) web service. Damieng used Azure Functions. But Amazon Lambda or Google Functions would be fine too.
+But I&#x27;m oldschool... I already have a VPS, so I use &lt;a href=&quot;https:&#x2F;&#x2F;en.wikipedia.org&#x2F;wiki&#x2F;Common_Gateway_Interface&quot;&gt;CGI&lt;&#x2F;a&gt;!&lt;&#x2F;p&gt;
+&lt;p&gt;I&#x27;m also a experienced Java developer, so I used &lt;a href=&quot;https:&#x2F;&#x2F;kotlinlang.org&#x2F;&quot;&gt;Kotlin&lt;&#x2F;a&gt;. J&#x2F;K of course I used &lt;a href=&quot;https:&#x2F;&#x2F;www.rust-lang.org&#x2F;&quot;&gt;Rust&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;I learn Rust as I go (I already tried that once but the burrow checker tried to murder me in my sleep), so take everything here with a grain of salt.&lt;&#x2F;p&gt;
+&lt;p&gt;So, let&#x27;s start with some Rust code. There is this really nice library called &lt;a href=&quot;https:&#x2F;&#x2F;serde.rs&#x2F;&quot;&gt;serde&lt;&#x2F;a&gt; which has a ton of serializers and deserializers for various formats.
+Like &lt;code&gt;urlencoded&lt;&#x2F;code&gt; which is what a simple form post will send.&lt;&#x2F;p&gt;
+&lt;p&gt;Now let&#x27;s write the code to process a &lt;code&gt;POST&lt;&#x2F;code&gt;ed comment:&lt;&#x2F;p&gt;
+&lt;pre data-lang=&quot;rust&quot; style=&quot;background-color:#2b303b;color:#c0c5ce;&quot; class=&quot;language-rust &quot;&gt;&lt;code class=&quot;language-rust&quot; data-lang=&quot;rust&quot;&gt;&lt;span&gt;#[&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;derive&lt;&#x2F;span&gt;&lt;span&gt;(Deserialize)]
+&lt;&#x2F;span&gt;&lt;span style=&quot;color:#b48ead;&quot;&gt;struct &lt;&#x2F;span&gt;&lt;span&gt;Post {
+&lt;&#x2F;span&gt;&lt;span&gt;    r#&lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;ref&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;message&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;name&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;url&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;    &lt;&#x2F;span&gt;&lt;span style=&quot;color:#bf616a;&quot;&gt;redirect&lt;&#x2F;span&gt;&lt;span&gt;: String,
+&lt;&#x2F;span&gt;&lt;span&gt;}
+&lt;&#x2F;span&gt;&lt;&#x2F;code&gt;&lt;&#x2F;pre&gt;
+&lt;p&gt;For those who have never seen C, a &lt;code&gt;struct&lt;&#x2F;code&gt; is like a &lt;code&gt;class&lt;&#x2F;code&gt;: A container for fields.&lt;&#x2F;p&gt;
+&lt;p&gt;That&#x27;s it! The &lt;code&gt;derive&lt;&#x2F;code&gt; attribute with the &lt;code&gt;Deserialize&lt;&#x2F;code&gt; argument will create the code to dump in a &lt;code&gt;urlendcoded&lt;&#x2F;code&gt; string and get out an instance of &lt;code&gt;Post&lt;&#x2F;code&gt;:
+{% highlight Rust %}
+let post: Post = serde_urlencoded::from_bytes(body.as_slice()).unwrap();
+{% endhighlight %}&lt;&#x2F;p&gt;
+&lt;p&gt;I omitted the boilerplate code to read the data from &lt;code&gt;stdin&lt;&#x2F;code&gt; - which is how you get data with &lt;code&gt;CGI&lt;&#x2F;code&gt;. The full code can be seen in my &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;Bytekeeper&#x2F;github_comment_rs&#x2F;blob&#x2F;master&#x2F;src&#x2F;main.rs&quot;&gt;GitHub repo&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;h2 id=&quot;step-2-create-a-branch-and-pr-automatically&quot;&gt;Step 2: Create a branch and PR automatically&lt;&#x2F;h2&gt;
+&lt;p&gt;Creating a branch and pushing it should be fairly simply with &lt;code&gt;GIT&lt;&#x2F;code&gt;&#x27;s CLI. But for the PR, the GitHub API will have to be used.&lt;&#x2F;p&gt;
+&lt;p&gt;It can also be used to create a branch and (!) even create a file in there. So I just have to use a GitHub API Rust implementation to solve this. 
+Actually, there are a few - but they are mostly unmaintained.
+They also don&#x27;t allow the shenanigans I need.&lt;&#x2F;p&gt;
+&lt;p&gt;&lt;em&gt;To be continued&lt;&#x2F;em&gt;&lt;&#x2F;p&gt;
+</content>
+	</entry>
+	<entry xml:lang="en">
+		<title>Slow bots on Basil</title>
+		<published>2020-01-13T00:00:00+00:00</published>
+		<updated>2020-01-13T00:00:00+00:00</updated>
+		<link rel="alternate" href="https://www.bytekeeper.org/blog/basil-timeouts/" type="text/html"/>
+		<id>https://www.bytekeeper.org/blog/basil-timeouts/</id>
+		<content type="html">&lt;p&gt;If you haven&#x27;t yet, check out &lt;a href=&quot;https:&#x2F;&#x2F;basil.bytekeeper.org&#x2F;&quot;&gt;BASIL&lt;&#x2F;a&gt;. It&#x27;s a 24&#x2F;7 Starcraft league, but for bots!
+It usually runs fine nowadays. But sometimes an external hiccup occurs. One of those is the problem of detecting who to blame if a game times out.
+It works fine if the game ends with the in-game timeout of 60min, since the &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;basil-ladder&#x2F;sc-tm&quot;&gt;Tournament Module&lt;&#x2F;a&gt; BASIL uses
+will make both bots leave and select the winner based on the score (That might be unfair, but that&#x27;s a topic for another post).&lt;&#x2F;p&gt;
+&lt;p&gt;But if a game gets killed because it took to long (wall-clock time), what then? There are no scores, no replays - nothing essentially.
+Besides a bot just hanging, most bots just take their time. So I wanted to penalize the slower bot in that case. This looked like a good idea back
+in the beginning. For &lt;code&gt;dll&lt;&#x2F;code&gt; bots this works fine, but for &lt;code&gt;client&lt;&#x2F;code&gt; bots, it didn&#x27;t work up until &lt;a href=&quot;https:&#x2F;&#x2F;github.com&#x2F;bwapi&#x2F;bwapi&#x2F;commit&#x2F;4a984290cf6aa6f05ebcbdcd4a094ffceb57f6e9&quot;&gt;BWAPI 4.4&lt;&#x2F;a&gt;.&lt;&#x2F;p&gt;
+&lt;p&gt;As of today that means that games timing out in that fashion will not be counted. One could abuse this by timing out intentionally for imminent losses. 
+I don&#x27;t expect this to happen, the bot community is generally competitive, but also friendly and fair. (Totally unrelated: I can actually disable bots permanently)&lt;&#x2F;p&gt;
+</content>
+	</entry>
+</feed>
